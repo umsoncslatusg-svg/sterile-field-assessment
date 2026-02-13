@@ -41,12 +41,17 @@ body {
   border-radius: 6px;
 }
 
-/* SCORE */
-#scoreBoard {
-  font-size: 20px;
+/* SCORE AREA */
+.score-wrapper {
+  display: flex;
+  gap: 40px;
   margin-bottom: 20px;
   font-weight: bold;
   color: #1e8449;
+}
+
+#contaminationCount {
+  color: #c0392b;
 }
 
 /* LAYOUT */
@@ -91,7 +96,7 @@ body {
   to { transform: translateY(10px); opacity: 1; }
 }
 
-/* NUMBERED DROP ZONES */
+/* DROP ZONES */
 .drop-zone {
   position: absolute;
   width: 44px;
@@ -139,6 +144,15 @@ body {
   border-left: 4px solid #e74c3c;
 }
 
+/* Reset Button (Always Visible) */
+#resetBtn {
+  margin: 15px auto 0 auto;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+}
+
 /* Dot Bank */
 .bank {
   margin-top: 25px;
@@ -158,13 +172,6 @@ body {
 .dot-red { background: #e74c3c; }
 .dot-green { background: #2ecc71; }
 
-button {
-  margin: 25px auto 0 auto;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-  display: block;
-}
 </style>
 </head>
 
@@ -180,7 +187,10 @@ Sterile Field Competency Assessment
     <strong>Scenario:</strong> You are preparing a sterile field for a central line dressing change. Before proceeding, identify all areas that remain sterile and those that are contaminated.
   </div>
 
-  <div id="scoreBoard">Score: 0 / 20</div>
+  <div class="score-wrapper">
+    <div id="scoreBoard">Score: 0 / 20</div>
+    <div id="contaminationCount">Contaminations: 0</div>
+  </div>
 
   <div class="main-wrapper">
 
@@ -195,8 +205,7 @@ Sterile Field Competency Assessment
         <li>Drag the red dot to locations that are non-sterile.</li>
         <li>Drag the green dot to locations that are sterile.</li>
         <li>A dot will only place if your answer is correct.</li>
-        <li>Complete all 20 locations.</li>
-        <li>A score of 90% or higher is required to pass.</li>
+        <li>Your score and contamination count are displayed in the top left. Use this feedback to guide your decision-making as you continue.</li>
       </ul>
 
       <strong>Remember:</strong>
@@ -211,11 +220,11 @@ Sterile Field Competency Assessment
       </div>
 
       <div id="feedback"></div>
+      <button id="resetBtn" onclick="resetGame()">Reset</button>
+
     </div>
 
   </div>
-
-  <button onclick="resetGame()">Reset</button>
 
 </div>
 
@@ -245,28 +254,48 @@ let ZONES = [
 ];
 
 let score = 0;
+let contaminations = 0;
 let answeredZones = [];
 
 const container = document.getElementById("gameContainer");
 const scoreBoard = document.getElementById("scoreBoard");
+const contaminationDisplay = document.getElementById("contaminationCount");
 const feedback = document.getElementById("feedback");
 
+const correctSound = new Audio("Correct.mp3");
+const wrongSound = new Audio("Wrong.mp3");
+
 function renderZones() {
+
   container.innerHTML = "";
   score = 0;
+  contaminations = 0;
   answeredZones = [];
-  updateScore();
+  updateDisplays();
 
-  ZONES.forEach((zone, index) => {
+  let zonesSorted = ZONES.map((zone, index) => ({
+    ...zone,
+    originalIndex: index
+  })).sort((a, b) => {
+    if (Math.abs(a.top - b.top) < 40) {
+      return a.left - b.left;
+    }
+    return a.top - b.top;
+  });
+
+  zonesSorted.forEach((zone, visualNumber) => {
+
     const el = document.createElement("div");
     el.className = "drop-zone";
     el.style.top = zone.top + "px";
     el.style.left = zone.left + "px";
     el.setAttribute("data-answer", zone.answer);
-    el.setAttribute("data-index", index);
-    el.innerText = index + 1;   // NUMBERING
+    el.setAttribute("data-index", zone.originalIndex);
+    el.innerText = visualNumber + 1;
+
     el.addEventListener("dragover", e => e.preventDefault());
     el.addEventListener("drop", dropItem);
+
     container.appendChild(el);
   });
 }
@@ -278,6 +307,7 @@ document.querySelectorAll(".draggable").forEach(item => {
 });
 
 function dropItem(e) {
+
   e.preventDefault();
 
   const droppedType = e.dataTransfer.getData("type");
@@ -288,20 +318,31 @@ function dropItem(e) {
 
   if (droppedType === correctAnswer) {
 
+    correctSound.currentTime = 0;
+    correctSound.play();
+
     const placedDot = document.createElement("div");
-    placedDot.className = "draggable " + 
+    placedDot.className = "draggable " +
       (droppedType === "sterile" ? "dot-green" : "dot-red");
+
     placedDot.style.position = "absolute";
     placedDot.style.top = e.target.style.top;
     placedDot.style.left = e.target.style.left;
     placedDot.draggable = false;
+
     container.appendChild(placedDot);
 
     answeredZones.push(index);
     score++;
-    updateScore();
+    updateDisplays();
 
   } else {
+
+    wrongSound.currentTime = 0;
+    wrongSound.play();
+
+    contaminations++;
+    updateDisplays();
 
     container.classList.add("contaminated");
 
@@ -321,8 +362,9 @@ function dropItem(e) {
   }
 }
 
-function updateScore() {
+function updateDisplays() {
   scoreBoard.innerText = "Score: " + score + " / " + ZONES.length;
+  contaminationDisplay.innerText = "Contaminations: " + contaminations;
 }
 
 function resetGame() {
