@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sterile Field Competency Assessment</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #eef2f5;
+  margin: 0;
+}
+
+/* HEADER */
+.header-bar {
+  background: #1e8449;
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* MODULE */
+.module-wrapper {
+  max-width: 1500px;
+  margin: 30px auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  padding: 30px;
+}
+
+/* SCENARIO */
+.scenario {
+  font-size: 17px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f4f8f6;
+  border-left: 5px solid #1e8449;
+  border-radius: 6px;
+}
+
+/* SCORE */
+#scoreBoard {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #1e8449;
+}
+
+/* LAYOUT */
+.main-wrapper {
+  display: flex;
+  gap: 30px;
+}
+
+/* GAME */
+#gameContainer {
+  position: relative;
+  width: 1000px;
+  height: 750px;
+  background-image: url('sterile-field.jpg');
+  background-size: 1000px 750px;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  transition: box-shadow 0.4s ease;
+}
+
+/* Red Glow */
+.contaminated {
+  box-shadow: 0 0 45px rgba(231, 76, 60, 0.9);
+}
+
+/* Arrow */
+.arrow {
+  position: absolute;
+  top: -40px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid #e74c3c;
+  animation: pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: translateY(0); opacity: 0.8; }
+  to { transform: translateY(10px); opacity: 1; }
+}
+
+/* NUMBERED DROP ZONES */
+.drop-zone {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  background: rgba(255,255,255,0.7);
+}
+
+/* Divider */
+.divider {
+  width: 1px;
+  background: #ddd;
+}
+
+/* Instructions */
+.instructions {
+  width: 350px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.instructions h3 {
+  color: #1e8449;
+}
+
+/* Feedback */
+#feedback {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  display: none;
+  font-size: 14px;
+}
+
+.feedback-error {
+  background: #fdecea;
+  color: #922b21;
+  border-left: 4px solid #e74c3c;
+}
+
+/* Dot Bank */
+.bank {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.draggable {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid black;
+  cursor: grab;
+}
+
+.dot-red { background: #e74c3c; }
+.dot-green { background: #2ecc71; }
+
+button {
+  margin: 25px auto 0 auto;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header-bar">
+Sterile Field Competency Assessment
+</div>
+
+<div class="module-wrapper">
+
+  <div class="scenario">
+    <strong>Scenario:</strong> You are preparing a sterile field for a central line dressing change. Before proceeding, identify all areas that remain sterile and those that are contaminated.
+  </div>
+
+  <div id="scoreBoard">Score: 0 / 20</div>
+
+  <div class="main-wrapper">
+
+    <div id="gameContainer"></div>
+
+    <div class="divider"></div>
+
+    <div class="instructions">
+      <h3>Instructions:</h3>
+      <ul>
+        <li>Review the sterile field image carefully.</li>
+        <li>Drag the red dot to locations that are non-sterile.</li>
+        <li>Drag the green dot to locations that are sterile.</li>
+        <li>A dot will only place if your answer is correct.</li>
+        <li>Complete all 20 locations.</li>
+        <li>A score of 90% or higher is required to pass.</li>
+      </ul>
+
+      <strong>Remember:</strong>
+      <ul>
+        <li>The outer 1-inch border of a sterile field is considered contaminated.</li>
+        <li>Sterile items must only contact sterile surfaces.</li>
+      </ul>
+
+      <div class="bank">
+        <div class="draggable dot-red" draggable="true" data-type="nonsterile"></div>
+        <div class="draggable dot-green" draggable="true" data-type="sterile"></div>
+      </div>
+
+      <div id="feedback"></div>
+    </div>
+
+  </div>
+
+  <button onclick="resetGame()">Reset</button>
+
+</div>
+
+<script>
+
+let ZONES = [
+  { answer: "sterile", top: 66, left: 90 },
+  { answer: "sterile", top: 152, left: 275 },
+  { answer: "sterile", top: 236, left: 125 },
+  { answer: "sterile", top: 110, left: 657 },
+  { answer: "sterile", top: 70, left: 721 },
+  { answer: "sterile", top: 309, left: 514 },
+  { answer: "sterile", top: 390, left: 614 },
+  { answer: "sterile", top: 481, left: 180 },
+  { answer: "sterile", top: 543, left: 389 },
+  { answer: "sterile", top: 640, left: 625 },
+  { answer: "sterile", top: 669, left: 726 },
+  { answer: "sterile", top: 670, left: 65 },
+  { answer: "nonsterile", top: 24, left: 413 },
+  { answer: "nonsterile", top: 82, left: 292 },
+  { answer: "nonsterile", top: 326, left: 37 },
+  { answer: "nonsterile", top: 345, left: 771 },
+  { answer: "nonsterile", top: 438, left: 153 },
+  { answer: "nonsterile", top: 510, left: 245 },
+  { answer: "nonsterile", top: 615, left: 405 },
+  { answer: "nonsterile", top: 720, left: 437 }
+];
+
+let score = 0;
+let answeredZones = [];
+
+const container = document.getElementById("gameContainer");
+const scoreBoard = document.getElementById("scoreBoard");
+const feedback = document.getElementById("feedback");
+
+function renderZones() {
+  container.innerHTML = "";
+  score = 0;
+  answeredZones = [];
+  updateScore();
+
+  ZONES.forEach((zone, index) => {
+    const el = document.createElement("div");
+    el.className = "drop-zone";
+    el.style.top = zone.top + "px";
+    el.style.left = zone.left + "px";
+    el.setAttribute("data-answer", zone.answer);
+    el.setAttribute("data-index", index);
+    el.innerText = index + 1;   // NUMBERING
+    el.addEventListener("dragover", e => e.preventDefault());
+    el.addEventListener("drop", dropItem);
+    container.appendChild(el);
+  });
+}
+
+document.querySelectorAll(".draggable").forEach(item => {
+  item.addEventListener("dragstart", e => {
+    e.dataTransfer.setData("type", e.target.getAttribute("data-type"));
+  });
+});
+
+function dropItem(e) {
+  e.preventDefault();
+
+  const droppedType = e.dataTransfer.getData("type");
+  const correctAnswer = e.target.getAttribute("data-answer");
+  const index = e.target.getAttribute("data-index");
+
+  if (answeredZones.includes(index)) return;
+
+  if (droppedType === correctAnswer) {
+
+    const placedDot = document.createElement("div");
+    placedDot.className = "draggable " + 
+      (droppedType === "sterile" ? "dot-green" : "dot-red");
+    placedDot.style.position = "absolute";
+    placedDot.style.top = e.target.style.top;
+    placedDot.style.left = e.target.style.left;
+    placedDot.draggable = false;
+    container.appendChild(placedDot);
+
+    answeredZones.push(index);
+    score++;
+    updateScore();
+
+  } else {
+
+    container.classList.add("contaminated");
+
+    const arrow = document.createElement("div");
+    arrow.className = "arrow";
+    container.appendChild(arrow);
+
+    feedback.style.display = "block";
+    feedback.className = "feedback-error";
+    feedback.innerText =
+      "Incorrect. Review sterile boundary principles and continue.";
+
+    setTimeout(() => {
+      container.classList.remove("contaminated");
+      arrow.remove();
+    }, 1200);
+  }
+}
+
+function updateScore() {
+  scoreBoard.innerText = "Score: " + score + " / " + ZONES.length;
+}
+
+function resetGame() {
+  renderZones();
+  feedback.style.display = "none";
+}
+
+renderZones();
+
+</script>
+
+</body>
+</html>
