@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sterile Field Competency Assessment</title>
 
 <style>
@@ -9,6 +10,7 @@ body {
   font-family: Arial, sans-serif;
   background: #eef2f5;
   margin: 0;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* HEADER */
@@ -29,6 +31,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   padding: 30px;
+  transition: background 0.3s ease;
 }
 
 /* SCENARIO */
@@ -39,19 +42,32 @@ body {
   background: #f4f8f6;
   border-left: 5px solid #1e8449;
   border-radius: 6px;
+  transition: background 0.3s ease;
 }
 
 /* SCORE AREA */
 .score-wrapper {
   display: flex;
-  gap: 40px;
+  align-items: center;
+  gap: 30px;
   margin-bottom: 20px;
   font-weight: bold;
   color: #1e8449;
+  flex-wrap: wrap;
 }
 
 #contaminationCount {
   color: #c0392b;
+}
+
+#modeToggle {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid #1e8449;
+  background: white;
+  color: #1e8449;
 }
 
 /* LAYOUT */
@@ -60,17 +76,18 @@ body {
   gap: 30px;
 }
 
-/* GAME */
+/* GAME (RESPONSIVE) */
 #gameContainer {
   position: relative;
-  width: 1000px;
-  height: 750px;
+  width: min(100%, 1000px);   /* scales down on smaller screens */
+  aspect-ratio: 4 / 3;        /* keeps same geometry as your original 1000x750 build */
   background-image: url('sterile-field.jpg');
-  background-size: 1000px 750px;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   border-radius: 10px;
   border: 2px solid #ccc;
   transition: box-shadow 0.4s ease;
+  flex: 0 0 auto;
 }
 
 /* Red Glow */
@@ -96,20 +113,31 @@ body {
   to { transform: translateY(10px); opacity: 1; }
 }
 
-/* DROP ZONES */
+/* DROP ZONES (RESPONSIVE) */
 .drop-zone {
   position: absolute;
-  width: 44px;
-  height: 44px;
+  width: 4.4%;
+  height: 5.8%;
   border-radius: 50%;
   border: 2px dashed rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: clamp(10px, 1.2vw, 14px);
   font-weight: bold;
   color: #333;
   background: rgba(255,255,255,0.7);
+  user-select: none;
+}
+
+/* Placed dots scale with the image too */
+.placed-dot {
+  position: absolute;
+  width: 4.4%;
+  height: 5.8%;
+  border-radius: 50%;
+  border: 2px solid black;
+  cursor: default;
 }
 
 /* Divider */
@@ -172,6 +200,43 @@ body {
 .dot-red { background: #e74c3c; }
 .dot-green { background: #2ecc71; }
 
+/* NIGHT MODE */
+body.dark {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark .module-wrapper {
+  background: #1e1e1e;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+body.dark .scenario {
+  background: #263238;
+  border-left-color: #2ecc71;
+}
+
+body.dark .divider {
+  background: #444;
+}
+
+body.dark .drop-zone {
+  border: 2px dashed #aaa;
+  color: #e0e0e0;
+  background: rgba(50,50,50,0.7);
+}
+
+body.dark #modeToggle {
+  background: #333;
+  color: white;
+  border: 1px solid white;
+}
+
+@media (max-width: 1100px) {
+  .main-wrapper { flex-direction: column; }
+  .divider { display: none; }
+  .instructions { width: auto; }
+}
 </style>
 </head>
 
@@ -190,6 +255,7 @@ Sterile Field Competency Assessment
   <div class="score-wrapper">
     <div id="scoreBoard">Score: 0 / 20</div>
     <div id="contaminationCount">Contaminations: 0</div>
+    <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
   </div>
 
   <div class="main-wrapper">
@@ -229,28 +295,39 @@ Sterile Field Competency Assessment
 </div>
 
 <script>
+function toggleMode() {
+  document.body.classList.toggle("dark");
+  const btn = document.getElementById("modeToggle");
+  btn.innerText = document.body.classList.contains("dark") ? "Light Mode" : "Night Mode";
+}
 
+/*
+  IMPORTANT:
+  These zone % values are based on the same coordinate system you originally measured
+  against (1000 x 750). That’s why the mapping stays correct when the container scales.
+*/
 let ZONES = [
-  { answer: "sterile", top: 66, left: 90 },
-  { answer: "sterile", top: 152, left: 275 },
-  { answer: "sterile", top: 236, left: 125 },
-  { answer: "sterile", top: 110, left: 657 },
-  { answer: "sterile", top: 70, left: 721 },
-  { answer: "sterile", top: 309, left: 514 },
-  { answer: "sterile", top: 390, left: 614 },
-  { answer: "sterile", top: 481, left: 180 },
-  { answer: "sterile", top: 543, left: 389 },
-  { answer: "sterile", top: 640, left: 625 },
-  { answer: "sterile", top: 669, left: 726 },
-  { answer: "sterile", top: 670, left: 65 },
-  { answer: "nonsterile", top: 24, left: 413 },
-  { answer: "nonsterile", top: 82, left: 292 },
-  { answer: "nonsterile", top: 326, left: 37 },
-  { answer: "nonsterile", top: 345, left: 771 },
-  { answer: "nonsterile", top: 438, left: 153 },
-  { answer: "nonsterile", top: 510, left: 245 },
-  { answer: "nonsterile", top: 615, left: 405 },
-  { answer: "nonsterile", top: 720, left: 437 }
+  { answer: "sterile",    topPct:  8.8,   leftPct:  9.0  },
+  { answer: "sterile",    topPct: 20.2667,leftPct: 27.5  },
+  { answer: "sterile",    topPct: 31.4667,leftPct: 12.5  },
+  { answer: "sterile",    topPct: 14.6667,leftPct: 65.7  },
+  { answer: "sterile",    topPct:  9.3333,leftPct: 72.1  },
+  { answer: "sterile",    topPct: 41.2,   leftPct: 51.4  },
+  { answer: "sterile",    topPct: 52.0,   leftPct: 61.4  },
+  { answer: "sterile",    topPct: 64.1333,leftPct: 18.0  },
+  { answer: "sterile",    topPct: 72.4,   leftPct: 38.9  },
+  { answer: "sterile",    topPct: 85.3333,leftPct: 62.5  },
+  { answer: "sterile",    topPct: 89.2,   leftPct: 72.6  },
+  { answer: "sterile",    topPct: 89.3333,leftPct:  6.5  },
+
+  { answer: "nonsterile", topPct:  3.2,   leftPct: 41.3  },
+  { answer: "nonsterile", topPct: 10.9333,leftPct: 29.2  },
+  { answer: "nonsterile", topPct: 43.4667,leftPct:  3.7  },
+  { answer: "nonsterile", topPct: 46.0,   leftPct: 77.1  },
+  { answer: "nonsterile", topPct: 58.4,   leftPct: 15.3  },
+  { answer: "nonsterile", topPct: 68.0,   leftPct: 24.5  },
+  { answer: "nonsterile", topPct: 82.0,   leftPct: 40.5  },
+  { answer: "nonsterile", topPct: 96.0,   leftPct: 43.7  }
 ];
 
 let score = 0;
@@ -266,31 +343,29 @@ const correctSound = new Audio("Correct.mp3");
 const wrongSound = new Audio("Wrong.mp3");
 
 function renderZones() {
-
   container.innerHTML = "";
   score = 0;
   contaminations = 0;
   answeredZones = [];
   updateDisplays();
+  feedback.style.display = "none";
 
-  let zonesSorted = ZONES.map((zone, index) => ({
-    ...zone,
-    originalIndex: index
-  })).sort((a, b) => {
-    if (Math.abs(a.top - b.top) < 40) {
-      return a.left - b.left;
-    }
-    return a.top - b.top;
-  });
+  // Order numbers top-to-bottom, then left-to-right (same as your working version)
+  const zonesSorted = ZONES.map((z, idx) => ({...z, originalIndex: idx}))
+    .sort((a, b) => {
+      if (Math.abs(a.topPct - b.topPct) < 5) return a.leftPct - b.leftPct;
+      return a.topPct - b.topPct;
+    });
 
   zonesSorted.forEach((zone, visualNumber) => {
-
     const el = document.createElement("div");
     el.className = "drop-zone";
-    el.style.top = zone.top + "px";
-    el.style.left = zone.left + "px";
+    el.style.top = zone.topPct + "%";
+    el.style.left = zone.leftPct + "%";
     el.setAttribute("data-answer", zone.answer);
     el.setAttribute("data-index", zone.originalIndex);
+    el.setAttribute("data-top", zone.topPct);
+    el.setAttribute("data-left", zone.leftPct);
     el.innerText = visualNumber + 1;
 
     el.addEventListener("dragover", e => e.preventDefault());
@@ -307,39 +382,33 @@ document.querySelectorAll(".draggable").forEach(item => {
 });
 
 function dropItem(e) {
-
   e.preventDefault();
 
   const droppedType = e.dataTransfer.getData("type");
-  const correctAnswer = e.target.getAttribute("data-answer");
-  const index = e.target.getAttribute("data-index");
+  const correctAnswer = e.currentTarget.getAttribute("data-answer");
+  const index = e.currentTarget.getAttribute("data-index");
 
   if (answeredZones.includes(index)) return;
 
   if (droppedType === correctAnswer) {
-
+    // sound
     correctSound.currentTime = 0;
-    correctSound.play();
+    correctSound.play().catch(() => {});
 
     const placedDot = document.createElement("div");
-    placedDot.className = "draggable " +
-      (droppedType === "sterile" ? "dot-green" : "dot-red");
+    placedDot.className = "placed-dot " + (droppedType === "sterile" ? "dot-green" : "dot-red");
 
-    placedDot.style.position = "absolute";
-    placedDot.style.top = e.target.style.top;
-    placedDot.style.left = e.target.style.left;
-    placedDot.draggable = false;
+    placedDot.style.top = e.currentTarget.getAttribute("data-top") + "%";
+    placedDot.style.left = e.currentTarget.getAttribute("data-left") + "%";
 
     container.appendChild(placedDot);
 
     answeredZones.push(index);
     score++;
     updateDisplays();
-
   } else {
-
     wrongSound.currentTime = 0;
-    wrongSound.play();
+    wrongSound.play().catch(() => {});
 
     contaminations++;
     updateDisplays();
@@ -352,8 +421,7 @@ function dropItem(e) {
 
     feedback.style.display = "block";
     feedback.className = "feedback-error";
-    feedback.innerText =
-      "Incorrect. Review sterile boundary principles and continue.";
+    feedback.innerText = "Incorrect. Review sterile boundary principles and continue.";
 
     setTimeout(() => {
       container.classList.remove("contaminated");
@@ -369,11 +437,9 @@ function updateDisplays() {
 
 function resetGame() {
   renderZones();
-  feedback.style.display = "none";
 }
 
 renderZones();
-
 </script>
 
 </body>
