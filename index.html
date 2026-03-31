@@ -1,446 +1,561 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Intermittent Catheterization</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intermittent Catheterization</title>
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #eef2f5;
-  margin: 0;
-  transition: background 0.3s ease, color 0.3s ease;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-/* HEADER */
-.header-bar {
-  background: #1e8449;
-  color: white;
-  padding: 18px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #eef2f5;
+      color: #111;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
 
-/* MODULE */
-.module-wrapper {
-  max-width: 1500px;
-  margin: 30px auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  padding: 30px;
-  transition: background 0.3s ease;
-}
+    body.dark {
+      background: #121212;
+      color: #e0e0e0;
+    }
 
-/* SCENARIO */
-.scenario {
-  font-size: 17px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #f4f8f6;
-  border-left: 5px solid #1e8449;
-  border-radius: 6px;
-  transition: background 0.3s ease;
-}
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-/* SCORE AREA */
-.score-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  margin-bottom: 20px;
-  font-weight: bold;
-  color: #1e8449;
-  flex-wrap: wrap;
-}
+    .header-bar {
+      flex: 0 0 auto;
+      background: #1e8449;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      font-size: clamp(18px, 2vw, 28px);
+      padding: 16px 20px;
+    }
 
-#contaminationCount {
-  color: #c0392b;
-}
+    .content-area {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      overflow: hidden;
+    }
 
-#modeToggle {
-  padding: 6px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 6px;
-  border: 1px solid #1e8449;
-  background: white;
-  color: #1e8449;
-}
+    .module-wrapper {
+      width: 100%;
+      height: 100%;
+      max-width: 1800px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
 
-/* LAYOUT */
-.main-wrapper {
-  display: flex;
-  gap: 30px;
-}
+    body.dark .module-wrapper {
+      background: #1e1e1e;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
 
-/* GAME (RESPONSIVE) */
-#gameContainer {
-  position: relative;
-  width: min(100%, 1000px);   /* scales down on smaller screens */
-  aspect-ratio: 4 / 3;        /* keeps same geometry as your original 1000x750 build */
-  background-image: url('sterile-field.jpg');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  border-radius: 10px;
-  border: 2px solid #ccc;
-  transition: box-shadow 0.4s ease;
-  flex: 0 0 auto;
-}
+    .scenario {
+      flex: 0 0 auto;
+      font-size: clamp(14px, 1vw, 18px);
+      line-height: 1.4;
+      padding: 14px;
+      background: #f4f8f6;
+      border-left: 5px solid #1e8449;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
 
-/* Red Glow */
-.contaminated {
-  box-shadow: 0 0 45px rgba(231, 76, 60, 0.9);
-}
+    body.dark .scenario {
+      background: #263238;
+      border-left-color: #2ecc71;
+    }
 
-/* Arrow */
-.arrow {
-  position: absolute;
-  top: -40px;
-  right: 20px;
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-bottom: 35px solid #e74c3c;
-  animation: pulse 0.8s ease-in-out infinite alternate;
-}
+    .score-wrapper {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-weight: bold;
+      color: #1e8449;
+      font-size: clamp(14px, 0.95vw, 18px);
+    }
 
-@keyframes pulse {
-  from { transform: translateY(0); opacity: 0.8; }
-  to { transform: translateY(10px); opacity: 1; }
-}
+    #contaminationCount {
+      color: #c0392b;
+    }
 
-/* DROP ZONES (RESPONSIVE) */
-.drop-zone {
-  position: absolute;
-  width: 4.4%;
-  height: 5.8%;
-  border-radius: 50%;
-  border: 2px dashed rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(10px, 1.2vw, 14px);
-  font-weight: bold;
-  color: #333;
-  background: rgba(255,255,255,0.7);
-  user-select: none;
-}
+    #modeToggle {
+      padding: 8px 14px;
+      font-size: clamp(13px, 0.9vw, 16px);
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid #1e8449;
+      background: white;
+      color: #1e8449;
+    }
 
-/* Placed dots scale with the image too */
-.placed-dot {
-  position: absolute;
-  width: 4.4%;
-  height: 5.8%;
-  border-radius: 50%;
-  border: 2px solid black;
-  cursor: default;
-}
+    body.dark #modeToggle {
+      background: #333;
+      color: white;
+      border: 1px solid white;
+    }
 
-/* Divider */
-.divider {
-  width: 1px;
-  background: #ddd;
-}
+    .main-wrapper {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      gap: 18px;
+      align-items: stretch;
+      overflow: hidden;
+    }
 
-/* Instructions */
-.instructions {
-  width: 350px;
-  font-size: 15px;
-  line-height: 1.6;
-}
+    .game-panel {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-.instructions h3 {
-  color: #1e8449;
-}
+    #gameContainer {
+      position: relative;
+      height: 100%;
+      aspect-ratio: 4 / 3;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      background-image: url('sterile-field.jpg');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      transition: box-shadow 0.4s ease;
+      flex-shrink: 1;
+    }
 
-/* Feedback */
-#feedback {
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 6px;
-  display: none;
-  font-size: 14px;
-}
+    .divider {
+      flex: 0 0 1px;
+      background: #ddd;
+    }
 
-.feedback-error {
-  background: #fdecea;
-  color: #922b21;
-  border-left: 4px solid #e74c3c;
-}
+    body.dark .divider {
+      background: #444;
+    }
 
-/* Reset Button (Always Visible) */
-#resetBtn {
-  margin: 15px auto 0 auto;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-  display: block;
-}
+    .instructions {
+      flex: 0 0 clamp(260px, 22vw, 340px);
+      min-width: 240px;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-size: clamp(13px, 0.9vw, 16px);
+      line-height: 1.45;
+    }
 
-/* Dot Bank */
-.bank {
-  margin-top: 25px;
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-}
+    .instructions-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding-right: 6px;
+    }
 
-.draggable {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid black;
-  cursor: grab;
-}
+    .instructions h3 {
+      color: #1e8449;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: clamp(18px, 1.2vw, 24px);
+    }
 
-.dot-red { background: #e74c3c; }
-.dot-green { background: #2ecc71; }
+    .instructions ul {
+      margin-top: 8px;
+      margin-bottom: 16px;
+      padding-left: 22px;
+    }
 
-/* NIGHT MODE */
-body.dark {
-  background: #121212;
-  color: #e0e0e0;
-}
+    .bank {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
 
-body.dark .module-wrapper {
-  background: #1e1e1e;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
-}
+    .draggable {
+      width: clamp(44px, 3.5vw, 62px);
+      height: clamp(44px, 3.5vw, 62px);
+      border-radius: 50%;
+      border: 2px solid black;
+      cursor: grab;
+      flex: 0 0 auto;
+    }
 
-body.dark .scenario {
-  background: #263238;
-  border-left-color: #2ecc71;
-}
+    .dot-red {
+      background: #e74c3c;
+    }
 
-body.dark .divider {
-  background: #444;
-}
+    .dot-green {
+      background: #2ecc71;
+    }
 
-body.dark .drop-zone {
-  border: 2px dashed #aaa;
-  color: #e0e0e0;
-  background: rgba(50,50,50,0.7);
-}
+    #feedback {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 6px;
+      display: none;
+      font-size: clamp(13px, 0.9vw, 15px);
+    }
 
-body.dark #modeToggle {
-  background: #333;
-  color: white;
-  border: 1px solid white;
-}
+    .feedback-error {
+      background: #fdecea;
+      color: #922b21;
+      border-left: 4px solid #e74c3c;
+    }
 
-@media (max-width: 1100px) {
-  .main-wrapper { flex-direction: column; }
-  .divider { display: none; }
-  .instructions { width: auto; }
-}
-</style>
+    #resetBtn {
+      margin: 14px auto 0 auto;
+      padding: 8px 16px;
+      font-size: clamp(14px, 0.95vw, 16px);
+      cursor: pointer;
+      display: block;
+    }
+
+    .drop-zone {
+      position: absolute;
+      width: 4.4%;
+      height: 5.8%;
+      border-radius: 50%;
+      border: 2px dashed rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(10px, 1.1vw, 14px);
+      font-weight: bold;
+      color: #333;
+      background: rgba(255,255,255,0.7);
+      user-select: none;
+    }
+
+    body.dark .drop-zone {
+      border: 2px dashed #aaa;
+      color: #e0e0e0;
+      background: rgba(50,50,50,0.7);
+    }
+
+    .placed-dot {
+      position: absolute;
+      width: 4.4%;
+      height: 5.8%;
+      border-radius: 50%;
+      border: 2px solid black;
+      cursor: default;
+    }
+
+    .contaminated {
+      box-shadow: 0 0 45px rgba(231, 76, 60, 0.9);
+    }
+
+    .arrow {
+      position: absolute;
+      top: -40px;
+      right: 20px;
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 35px solid #e74c3c;
+      animation: pulse 0.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: translateY(0); opacity: 0.8; }
+      to { transform: translateY(10px); opacity: 1; }
+    }
+
+    @media (max-width: 1100px), (max-height: 700px) {
+      .main-wrapper {
+        gap: 12px;
+      }
+
+      .instructions {
+        flex-basis: 280px;
+      }
+
+      .module-wrapper {
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      html, body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .content-area {
+        overflow: visible;
+      }
+
+      .module-wrapper {
+        height: auto;
+        overflow: visible;
+      }
+
+      .main-wrapper {
+        flex-direction: column;
+        overflow: visible;
+      }
+
+      .game-panel {
+        width: 100%;
+        min-height: 0;
+      }
+
+      #gameContainer {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .instructions {
+        max-width: none;
+        width: 100%;
+      }
+
+      .instructions-scroll {
+        overflow: visible;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="app-shell">
+    <div class="header-bar">Intermittent Catheterization</div>
 
-<div class="header-bar">
-Intermittent Catheterization
-</div>
+    <div class="content-area">
+      <div class="module-wrapper">
 
-<div class="module-wrapper">
+        <div class="scenario">
+          <strong>Scenario:</strong> You are preparing a sterile field for a central line dressing change. Before proceeding, identify all areas that remain sterile and those that are contaminated.
+        </div>
 
-  <div class="scenario">
-    <strong>Scenario:</strong> You are preparing a sterile field for a central line dressing change. Before proceeding, identify all areas that remain sterile and those that are contaminated.
-  </div>
+        <div class="score-wrapper">
+          <div id="scoreBoard">Score: 0 / 20</div>
+          <div id="contaminationCount">Contaminations: 0</div>
+          <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
+        </div>
 
-  <div class="score-wrapper">
-    <div id="scoreBoard">Score: 0 / 20</div>
-    <div id="contaminationCount">Contaminations: 0</div>
-    <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
-  </div>
+        <div class="main-wrapper">
+          <div class="game-panel">
+            <div id="gameContainer"></div>
+          </div>
 
-  <div class="main-wrapper">
+          <div class="divider"></div>
 
-    <div id="gameContainer"></div>
+          <div class="instructions">
+            <div class="instructions-scroll">
+              <h3>Instructions:</h3>
+              <ul>
+                <li>Review the sterile field image carefully.</li>
+                <li>Drag the red dot to locations that are non-sterile.</li>
+                <li>Drag the green dot to locations that are sterile.</li>
+                <li>A dot will only place if your answer is correct.</li>
+                <li>Your score and contamination count are displayed in the top left. Use this feedback to guide your decision-making as you continue.</li>
+              </ul>
 
-    <div class="divider"></div>
+              <strong>Remember:</strong>
+              <ul>
+                <li>The outer 1-inch border of a sterile field is considered contaminated.</li>
+                <li>Sterile items must only contact sterile surfaces.</li>
+              </ul>
 
-    <div class="instructions">
-      <h3>Instructions:</h3>
-      <ul>
-        <li>Review the sterile field image carefully.</li>
-        <li>Drag the red dot to locations that are non-sterile.</li>
-        <li>Drag the green dot to locations that are sterile.</li>
-        <li>A dot will only place if your answer is correct.</li>
-        <li>Your score and contamination count are displayed in the top left. Use this feedback to guide your decision-making as you continue.</li>
-      </ul>
+              <div class="bank">
+                <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
+                <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
+              </div>
 
-      <strong>Remember:</strong>
-      <ul>
-        <li>The outer 1-inch border of a sterile field is considered contaminated.</li>
-        <li>Sterile items must only contact sterile surfaces.</li>
-      </ul>
+              <div id="feedback"></div>
+              <button id="resetBtn" onclick="resetGame()">Reset</button>
+            </div>
+          </div>
+        </div>
 
-      <div class="bank">
-        <div class="draggable dot-red" draggable="true" data-type="nonsterile"></div>
-        <div class="draggable dot-green" draggable="true" data-type="sterile"></div>
       </div>
-
-      <div id="feedback"></div>
-      <button id="resetBtn" onclick="resetGame()">Reset</button>
-
     </div>
-
   </div>
 
-</div>
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle("dark");
+      const btn = document.getElementById("modeToggle");
+      btn.innerText = document.body.classList.contains("dark") ? "Light Mode" : "Night Mode";
+    }
 
-<script>
-function toggleMode() {
-  document.body.classList.toggle("dark");
-  const btn = document.getElementById("modeToggle");
-  btn.innerText = document.body.classList.contains("dark") ? "Light Mode" : "Night Mode";
-}
+    let ZONES = [
+      { answer: "sterile",    topPct:  8.8,   leftPct:  9.0  },
+      { answer: "sterile",    topPct: 20.2667,leftPct: 27.5  },
+      { answer: "sterile",    topPct: 31.4667,leftPct: 12.5  },
+      { answer: "sterile",    topPct: 14.6667,leftPct: 65.7  },
+      { answer: "sterile",    topPct:  9.3333,leftPct: 72.1  },
+      { answer: "sterile",    topPct: 41.2,   leftPct: 51.4  },
+      { answer: "sterile",    topPct: 52.0,   leftPct: 61.4  },
+      { answer: "sterile",    topPct: 64.1333,leftPct: 18.0  },
+      { answer: "sterile",    topPct: 72.4,   leftPct: 38.9  },
+      { answer: "sterile",    topPct: 85.3333,leftPct: 62.5  },
+      { answer: "sterile",    topPct: 89.2,   leftPct: 72.6  },
+      { answer: "sterile",    topPct: 89.3333,leftPct:  6.5  },
 
-/*
-  IMPORTANT:
-  These zone % values are based on the same coordinate system you originally measured
-  against (1000 x 750). That’s why the mapping stays correct when the container scales.
-*/
-let ZONES = [
-  { answer: "sterile",    topPct:  8.8,   leftPct:  9.0  },
-  { answer: "sterile",    topPct: 20.2667,leftPct: 27.5  },
-  { answer: "sterile",    topPct: 31.4667,leftPct: 12.5  },
-  { answer: "sterile",    topPct: 14.6667,leftPct: 65.7  },
-  { answer: "sterile",    topPct:  9.3333,leftPct: 72.1  },
-  { answer: "sterile",    topPct: 41.2,   leftPct: 51.4  },
-  { answer: "sterile",    topPct: 52.0,   leftPct: 61.4  },
-  { answer: "sterile",    topPct: 64.1333,leftPct: 18.0  },
-  { answer: "sterile",    topPct: 72.4,   leftPct: 38.9  },
-  { answer: "sterile",    topPct: 85.3333,leftPct: 62.5  },
-  { answer: "sterile",    topPct: 89.2,   leftPct: 72.6  },
-  { answer: "sterile",    topPct: 89.3333,leftPct:  6.5  },
+      { answer: "nonsterile", topPct:  3.2,   leftPct: 41.3  },
+      { answer: "nonsterile", topPct: 10.9333,leftPct: 29.2  },
+      { answer: "nonsterile", topPct: 43.4667,leftPct:  3.7  },
+      { answer: "nonsterile", topPct: 46.0,   leftPct: 77.1  },
+      { answer: "nonsterile", topPct: 58.4,   leftPct: 15.3  },
+      { answer: "nonsterile", topPct: 68.0,   leftPct: 24.5  },
+      { answer: "nonsterile", topPct: 82.0,   leftPct: 40.5  },
+      { answer: "nonsterile", topPct: 96.0,   leftPct: 43.7  }
+    ];
 
-  { answer: "nonsterile", topPct:  3.2,   leftPct: 41.3  },
-  { answer: "nonsterile", topPct: 10.9333,leftPct: 29.2  },
-  { answer: "nonsterile", topPct: 43.4667,leftPct:  3.7  },
-  { answer: "nonsterile", topPct: 46.0,   leftPct: 77.1  },
-  { answer: "nonsterile", topPct: 58.4,   leftPct: 15.3  },
-  { answer: "nonsterile", topPct: 68.0,   leftPct: 24.5  },
-  { answer: "nonsterile", topPct: 82.0,   leftPct: 40.5  },
-  { answer: "nonsterile", topPct: 96.0,   leftPct: 43.7  }
-];
+    let score = 0;
+    let contaminations = 0;
+    let answeredZones = [];
 
-let score = 0;
-let contaminations = 0;
-let answeredZones = [];
+    const container = document.getElementById("gameContainer");
+    const scoreBoard = document.getElementById("scoreBoard");
+    const contaminationDisplay = document.getElementById("contaminationCount");
+    const feedback = document.getElementById("feedback");
 
-const container = document.getElementById("gameContainer");
-const scoreBoard = document.getElementById("scoreBoard");
-const contaminationDisplay = document.getElementById("contaminationCount");
-const feedback = document.getElementById("feedback");
+    const correctSound = new Audio("Correct.mp3");
+    const wrongSound = new Audio("Wrong.mp3");
 
-const correctSound = new Audio("Correct.mp3");
-const wrongSound = new Audio("Wrong.mp3");
+    function renderZones() {
+      container.innerHTML = "";
+      score = 0;
+      contaminations = 0;
+      answeredZones = [];
+      updateDisplays();
+      feedback.style.display = "none";
+      feedback.innerText = "";
+      feedback.className = "";
 
-function renderZones() {
-  container.innerHTML = "";
-  score = 0;
-  contaminations = 0;
-  answeredZones = [];
-  updateDisplays();
-  feedback.style.display = "none";
+      const zonesSorted = ZONES.map((z, idx) => ({ ...z, originalIndex: idx }))
+        .sort((a, b) => {
+          if (Math.abs(a.topPct - b.topPct) < 5) return a.leftPct - b.leftPct;
+          return a.topPct - b.topPct;
+        });
 
-  // Order numbers top-to-bottom, then left-to-right (same as your working version)
-  const zonesSorted = ZONES.map((z, idx) => ({...z, originalIndex: idx}))
-    .sort((a, b) => {
-      if (Math.abs(a.topPct - b.topPct) < 5) return a.leftPct - b.leftPct;
-      return a.topPct - b.topPct;
+      zonesSorted.forEach((zone, visualNumber) => {
+        const el = document.createElement("div");
+        el.className = "drop-zone";
+        el.style.top = zone.topPct + "%";
+        el.style.left = zone.leftPct + "%";
+        el.setAttribute("data-answer", zone.answer);
+        el.setAttribute("data-index", zone.originalIndex);
+        el.setAttribute("data-top", zone.topPct);
+        el.setAttribute("data-left", zone.leftPct);
+        el.innerText = visualNumber + 1;
+
+        el.addEventListener("dragover", e => e.preventDefault());
+        el.addEventListener("drop", dropItem);
+
+        container.appendChild(el);
+      });
+    }
+
+    document.querySelectorAll(".draggable").forEach(item => {
+      item.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("type", e.target.getAttribute("data-type"));
+      });
     });
 
-  zonesSorted.forEach((zone, visualNumber) => {
-    const el = document.createElement("div");
-    el.className = "drop-zone";
-    el.style.top = zone.topPct + "%";
-    el.style.left = zone.leftPct + "%";
-    el.setAttribute("data-answer", zone.answer);
-    el.setAttribute("data-index", zone.originalIndex);
-    el.setAttribute("data-top", zone.topPct);
-    el.setAttribute("data-left", zone.leftPct);
-    el.innerText = visualNumber + 1;
+    function dropItem(e) {
+      e.preventDefault();
 
-    el.addEventListener("dragover", e => e.preventDefault());
-    el.addEventListener("drop", dropItem);
+      const droppedType = e.dataTransfer.getData("type");
+      const correctAnswer = e.currentTarget.getAttribute("data-answer");
+      const index = e.currentTarget.getAttribute("data-index");
 
-    container.appendChild(el);
-  });
-}
+      if (answeredZones.includes(index)) return;
 
-document.querySelectorAll(".draggable").forEach(item => {
-  item.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("type", e.target.getAttribute("data-type"));
-  });
-});
+      if (droppedType === correctAnswer) {
+        correctSound.currentTime = 0;
+        correctSound.play().catch(() => {});
 
-function dropItem(e) {
-  e.preventDefault();
+        const placedDot = document.createElement("div");
+        placedDot.className = "placed-dot " + (droppedType === "sterile" ? "dot-green" : "dot-red");
+        placedDot.style.top = e.currentTarget.getAttribute("data-top") + "%";
+        placedDot.style.left = e.currentTarget.getAttribute("data-left") + "%";
 
-  const droppedType = e.dataTransfer.getData("type");
-  const correctAnswer = e.currentTarget.getAttribute("data-answer");
-  const index = e.currentTarget.getAttribute("data-index");
+        container.appendChild(placedDot);
 
-  if (answeredZones.includes(index)) return;
+        answeredZones.push(index);
+        score++;
+        updateDisplays();
+      } else {
+        wrongSound.currentTime = 0;
+        wrongSound.play().catch(() => {});
 
-  if (droppedType === correctAnswer) {
-    // sound
-    correctSound.currentTime = 0;
-    correctSound.play().catch(() => {});
+        contaminations++;
+        updateDisplays();
 
-    const placedDot = document.createElement("div");
-    placedDot.className = "placed-dot " + (droppedType === "sterile" ? "dot-green" : "dot-red");
+        container.classList.add("contaminated");
 
-    placedDot.style.top = e.currentTarget.getAttribute("data-top") + "%";
-    placedDot.style.left = e.currentTarget.getAttribute("data-left") + "%";
+        const arrow = document.createElement("div");
+        arrow.className = "arrow";
+        container.appendChild(arrow);
 
-    container.appendChild(placedDot);
+        feedback.style.display = "block";
+        feedback.className = "feedback-error";
+        feedback.innerText = "Incorrect. Review sterile boundary principles and continue.";
 
-    answeredZones.push(index);
-    score++;
-    updateDisplays();
-  } else {
-    wrongSound.currentTime = 0;
-    wrongSound.play().catch(() => {});
+        setTimeout(() => {
+          container.classList.remove("contaminated");
+          arrow.remove();
+        }, 1200);
+      }
+    }
 
-    contaminations++;
-    updateDisplays();
+    function updateDisplays() {
+      scoreBoard.innerText = "Score: " + score + " / " + ZONES.length;
+      contaminationDisplay.innerText = "Contaminations: " + contaminations;
+    }
 
-    container.classList.add("contaminated");
+    function resetGame() {
+      renderZones();
+    }
 
-    const arrow = document.createElement("div");
-    arrow.className = "arrow";
-    container.appendChild(arrow);
-
-    feedback.style.display = "block";
-    feedback.className = "feedback-error";
-    feedback.innerText = "Incorrect. Review sterile boundary principles and continue.";
-
-    setTimeout(() => {
-      container.classList.remove("contaminated");
-      arrow.remove();
-    }, 1200);
-  }
-}
-
-function updateDisplays() {
-  scoreBoard.innerText = "Score: " + score + " / " + ZONES.length;
-  contaminationDisplay.innerText = "Contaminations: " + contaminations;
-}
-
-function resetGame() {
-  renderZones();
-}
-
-renderZones();
-</script>
-
+    renderZones();
+  </script>
 </body>
 </html>
