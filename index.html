@@ -40,8 +40,8 @@
       color: white;
       text-align: center;
       font-weight: bold;
-      font-size: clamp(20px, 2vw, 30px);
-      padding: 14px 18px;
+      font-size: clamp(22px, 2vw, 30px);
+      padding: 12px 18px;
     }
 
     .page-wrap {
@@ -60,7 +60,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 12px;
+      padding: 10px 12px;
       overflow: hidden;
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
@@ -72,7 +72,7 @@
 
     .scenario {
       flex: 0 0 auto;
-      font-size: clamp(14px, 1vw, 17px);
+      font-size: clamp(14px, 0.95vw, 17px);
       line-height: 1.35;
       padding: 10px 12px;
       background: #f4f8f6;
@@ -122,24 +122,24 @@
       flex: 1 1 auto;
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
+      grid-template-columns: minmax(0, 1fr) 250px;
       gap: 14px;
       overflow: hidden;
       align-items: stretch;
     }
 
-    .game-side {
+    .left-panel {
       min-width: 0;
       min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: 10px;
       overflow: hidden;
     }
 
-    .game-stage {
-      width: 100%;
-      height: 100%;
+    .game-side {
+      min-width: 0;
+      min-height: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -162,13 +162,43 @@
       flex-shrink: 1;
     }
 
+    .bottom-controls {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 26px;
+      padding: 4px 0 2px;
+      flex-wrap: wrap;
+    }
+
+    .draggable {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid black;
+      cursor: grab;
+      flex: 0 0 auto;
+    }
+
+    .dot-red { background: #e74c3c; }
+    .dot-green { background: #2ecc71; }
+
+    #resetBtn {
+      padding: 10px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+    }
+
     .right-panel {
       min-width: 0;
       min-height: 0;
       border-left: 1px solid #ddd;
       padding-left: 14px;
-      display: grid;
-      grid-template-rows: auto auto auto 1fr auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
       gap: 10px;
       overflow: hidden;
     }
@@ -180,55 +210,30 @@
     .instructions h3 {
       margin: 0;
       color: #1e8449;
-      font-size: clamp(22px, 1.3vw, 26px);
+      font-size: clamp(24px, 1.3vw, 28px);
     }
 
     .instructions-list,
     .remember-list {
       margin: 0;
       padding-left: 22px;
-      font-size: clamp(14px, 0.95vw, 16px);
-      line-height: 1.45;
+      font-size: clamp(14px, 0.9vw, 16px);
+      line-height: 1.4;
     }
 
     .instructions-list li,
     .remember-list li {
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .remember-label {
       font-weight: bold;
       font-size: clamp(15px, 1vw, 17px);
-      margin-top: 2px;
-    }
-
-    .bank {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      align-items: center;
-      padding-top: 4px;
-    }
-
-    .draggable {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      border: 2px solid black;
-      cursor: grab;
-      flex: 0 0 auto;
-    }
-
-    .dot-red { background: #e74c3c; }
-    .dot-green { background: #2ecc71; }
-
-    .feedback-wrap {
-      display: flex;
-      align-items: end;
-      min-height: 0;
+      margin-top: 4px;
     }
 
     #feedback {
+      margin-top: 6px;
       width: 100%;
       padding: 12px;
       border-radius: 6px;
@@ -242,32 +247,19 @@
       border-left: 4px solid #e74c3c;
     }
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #resetBtn {
-      padding: 8px 16px;
-      font-size: 16px;
-      cursor: pointer;
-      display: block;
-    }
-
     .drop-zone {
       position: absolute;
-      width: 4.4%;
-      height: 5.8%;
+      width: 5.4%;
+      height: 7.2%;
       border-radius: 50%;
       border: 2px dashed rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(10px, 1.1vw, 14px);
+      font-size: clamp(12px, 1.35vw, 18px);
       font-weight: bold;
       color: #333;
-      background: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.82);
       user-select: none;
     }
 
@@ -279,8 +271,8 @@
 
     .placed-dot {
       position: absolute;
-      width: 4.4%;
-      height: 5.8%;
+      width: 5.4%;
+      height: 7.2%;
       border-radius: 50%;
       border: 2px solid black;
       cursor: default;
@@ -309,17 +301,17 @@
 
     @media (max-width: 1200px) {
       .main-wrapper {
-        grid-template-columns: minmax(0, 1fr) 270px;
-      }
-
-      .draggable {
-        width: 54px;
-        height: 54px;
+        grid-template-columns: minmax(0, 1fr) 220px;
       }
 
       .instructions-list,
       .remember-list {
         font-size: 13px;
+      }
+
+      .draggable {
+        width: 58px;
+        height: 58px;
       }
     }
 
@@ -356,6 +348,7 @@
         overflow: visible;
       }
 
+      .left-panel,
       .game-side {
         overflow: visible;
       }
@@ -386,9 +379,15 @@
         </div>
 
         <div class="main-wrapper">
-          <div class="game-side">
-            <div class="game-stage">
+          <div class="left-panel">
+            <div class="game-side">
               <div id="gameContainer"></div>
+            </div>
+
+            <div class="bottom-controls">
+              <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
+              <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
+              <button id="resetBtn" onclick="resetGame()">Reset</button>
             </div>
           </div>
 
@@ -413,20 +412,7 @@
               </ul>
             </div>
 
-            <div class="feedback-wrap">
-              <div style="width:100%;">
-                <div class="bank">
-                  <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
-                  <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
-                </div>
-
-                <div id="feedback"></div>
-              </div>
-            </div>
-
-            <div class="controls">
-              <button id="resetBtn" onclick="resetGame()">Reset</button>
-            </div>
+            <div id="feedback"></div>
           </div>
         </div>
 
