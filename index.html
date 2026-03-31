@@ -68,7 +68,6 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
 
-    /* LEFT GAME PANEL */
     .game-panel {
       padding: 10px;
       display: flex;
@@ -92,7 +91,6 @@
       align-self: center;
     }
 
-    /* CENTER PANEL */
     .center-panel {
       padding: 18px 18px 16px;
       display: grid;
@@ -178,7 +176,6 @@
       color: #c0392b;
     }
 
-    /* RIGHT PANEL */
     .right-panel {
       padding: 20px 18px;
       display: grid;
@@ -250,17 +247,17 @@
       border-left: 6px solid #e74c3c;
     }
 
-    /* 75% of previous 8.2 x 10.8 */
+    /* 25% smaller than 6.15 x 8.1 */
     .drop-zone {
       position: absolute;
-      width: 6.15%;
-      height: 8.1%;
+      width: 4.6%;
+      height: 6.1%;
       border-radius: 50%;
       border: 3px dashed rgba(0,0,0,0.55);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(14px, 1.15vw, 22px);
+      font-size: clamp(12px, 1vw, 18px);
       font-weight: bold;
       color: #222;
       background: rgba(255,255,255,0.88);
@@ -275,8 +272,8 @@
 
     .placed-dot {
       position: absolute;
-      width: 6.15%;
-      height: 8.1%;
+      width: 4.6%;
+      height: 6.1%;
       border-radius: 50%;
       border: 3px solid black;
       cursor: default;
@@ -493,27 +490,26 @@
     }
 
     let ZONES = [
-      { answer: "sterile",    topPct:  8.8,   leftPct:  9.0  },
-      { answer: "sterile",    topPct: 20.2667,leftPct: 27.5  },
-      { answer: "sterile",    topPct: 31.4667,leftPct: 12.5  },
-      { answer: "sterile",    topPct: 14.6667,leftPct: 65.7  },
-      { answer: "sterile",    topPct:  9.3333,leftPct: 72.1  },
-      { answer: "sterile",    topPct: 41.2,   leftPct: 51.4  },
-      { answer: "sterile",    topPct: 52.0,   leftPct: 61.4  },
-      { answer: "sterile",    topPct: 64.1333,leftPct: 18.0  },
-      { answer: "sterile",    topPct: 72.4,   leftPct: 38.9  },
-      { answer: "sterile",    topPct: 85.3333,leftPct: 62.5  },
-      { answer: "sterile",    topPct: 89.2,   leftPct: 72.6  },
-      { answer: "sterile",    topPct: 89.3333,leftPct:  6.5  },
-
-      { answer: "nonsterile", topPct:  3.2,   leftPct: 41.3  },
-      { answer: "nonsterile", topPct: 10.9333,leftPct: 29.2  },
-      { answer: "nonsterile", topPct: 43.4667,leftPct:  3.7  },
-      { answer: "nonsterile", topPct: 46.0,   leftPct: 77.1  },
-      { answer: "nonsterile", topPct: 58.4,   leftPct: 15.3  },
-      { answer: "nonsterile", topPct: 68.0,   leftPct: 24.5  },
-      { answer: "nonsterile", topPct: 82.0,   leftPct: 40.5  },
-      { answer: "nonsterile", topPct: 96.0,   leftPct: 43.7  }
+      { label: 1,  answer: "nonsterile", topPct: 3.2,    leftPct: 41.3 },
+      { label: 2,  answer: "sterile",    topPct: 8.8,    leftPct: 9.0 },
+      { label: 3,  answer: "sterile",    topPct: 9.3333, leftPct: 72.1 },
+      { label: 4,  answer: "nonsterile", topPct: 10.9333,leftPct: 29.2 },
+      { label: 5,  answer: "sterile",    topPct: 14.6667,leftPct: 65.7 },
+      { label: 6,  answer: "sterile",    topPct: 20.2667,leftPct: 27.5 },
+      { label: 7,  answer: "sterile",    topPct: 31.4667,leftPct: 12.5 },
+      { label: 8,  answer: "nonsterile", topPct: 43.4667,leftPct: 3.7 },
+      { label: 9,  answer: "sterile",    topPct: 41.2,   leftPct: 51.4 },
+      { label: 10, answer: "nonsterile", topPct: 46.0,   leftPct: 77.1 },
+      { label: 11, answer: "sterile",    topPct: 52.0,   leftPct: 61.4 },
+      { label: 12, answer: "nonsterile", topPct: 58.4,   leftPct: 15.3 },
+      { label: 13, answer: "sterile",    topPct: 64.1333,leftPct: 18.0 },
+      { label: 14, answer: "nonsterile", topPct: 68.0,   leftPct: 24.5 },
+      { label: 15, answer: "sterile",    topPct: 72.4,   leftPct: 38.9 },
+      { label: 16, answer: "nonsterile", topPct: 82.0,   leftPct: 40.5 },
+      { label: 17, answer: "sterile",    topPct: 85.3333,leftPct: 62.5 },
+      { label: 18, answer: "sterile",    topPct: 89.2,   leftPct: 72.6 },
+      { label: 19, answer: "sterile",    topPct: 89.3333,leftPct: 6.5 },
+      { label: 20, answer: "nonsterile", topPct: 96.0,   leftPct: 43.7 }
     ];
 
     let score = 0;
@@ -538,22 +534,16 @@
       feedback.innerText = "";
       feedback.className = "";
 
-      const zonesSorted = ZONES.map((z, idx) => ({ ...z, originalIndex: idx }))
-        .sort((a, b) => {
-          if (Math.abs(a.topPct - b.topPct) < 5) return a.leftPct - b.leftPct;
-          return a.topPct - b.topPct;
-        });
-
-      zonesSorted.forEach((zone, visualNumber) => {
+      ZONES.forEach((zone) => {
         const el = document.createElement("div");
         el.className = "drop-zone";
         el.style.top = zone.topPct + "%";
         el.style.left = zone.leftPct + "%";
         el.setAttribute("data-answer", zone.answer);
-        el.setAttribute("data-index", zone.originalIndex);
+        el.setAttribute("data-label", zone.label);
         el.setAttribute("data-top", zone.topPct);
         el.setAttribute("data-left", zone.leftPct);
-        el.innerText = visualNumber + 1;
+        el.innerText = zone.label;
 
         el.addEventListener("dragover", e => e.preventDefault());
         el.addEventListener("drop", dropItem);
@@ -573,9 +563,9 @@
 
       const droppedType = e.dataTransfer.getData("type");
       const correctAnswer = e.currentTarget.getAttribute("data-answer");
-      const index = e.currentTarget.getAttribute("data-index");
+      const label = e.currentTarget.getAttribute("data-label");
 
-      if (answeredZones.includes(index)) return;
+      if (answeredZones.includes(label)) return;
 
       if (droppedType === correctAnswer) {
         correctSound.currentTime = 0;
@@ -588,7 +578,7 @@
 
         container.appendChild(placedDot);
 
-        answeredZones.push(index);
+        answeredZones.push(label);
         score++;
         updateDisplays();
       } else {
