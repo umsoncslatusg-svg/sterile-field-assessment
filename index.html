@@ -11,9 +11,9 @@
     }
 
     html, body {
+      margin: 0;
       width: 100%;
       height: 100%;
-      margin: 0;
       overflow: hidden;
       font-family: Arial, sans-serif;
       background: #eef2f5;
@@ -27,10 +27,10 @@
     }
 
     .app-shell {
-      display: flex;
-      flex-direction: column;
       width: 100vw;
       height: 100vh;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
     }
 
@@ -40,31 +40,27 @@
       color: white;
       text-align: center;
       font-weight: bold;
-      font-size: clamp(18px, 2vw, 28px);
-      padding: 16px 20px;
+      font-size: clamp(20px, 2vw, 30px);
+      padding: 14px 18px;
     }
 
-    .content-area {
+    .page-wrap {
       flex: 1 1 auto;
       min-height: 0;
-      padding: 14px;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
+      padding: 10px;
       overflow: hidden;
     }
 
     .module-wrapper {
       width: 100%;
       height: 100%;
-      max-width: 1800px;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      padding: 18px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
+      padding: 12px;
       overflow: hidden;
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
@@ -76,9 +72,9 @@
 
     .scenario {
       flex: 0 0 auto;
-      font-size: clamp(14px, 1vw, 18px);
-      line-height: 1.4;
-      padding: 14px;
+      font-size: clamp(14px, 1vw, 17px);
+      line-height: 1.35;
+      padding: 10px 12px;
       background: #f4f8f6;
       border-left: 5px solid #1e8449;
       border-radius: 6px;
@@ -94,11 +90,12 @@
       flex: 0 0 auto;
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 18px;
       flex-wrap: wrap;
       font-weight: bold;
       color: #1e8449;
-      font-size: clamp(14px, 0.95vw, 18px);
+      font-size: clamp(14px, 0.95vw, 17px);
+      padding: 0 2px;
     }
 
     #contaminationCount {
@@ -106,8 +103,8 @@
     }
 
     #modeToggle {
-      padding: 8px 14px;
-      font-size: clamp(13px, 0.9vw, 16px);
+      padding: 7px 12px;
+      font-size: clamp(13px, 0.9vw, 15px);
       cursor: pointer;
       border-radius: 6px;
       border: 1px solid #1e8449;
@@ -124,15 +121,25 @@
     .main-wrapper {
       flex: 1 1 auto;
       min-height: 0;
-      display: flex;
-      gap: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 14px;
+      overflow: hidden;
       align-items: stretch;
+    }
+
+    .game-side {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
 
-    .game-panel {
-      flex: 1 1 auto;
-      min-width: 0;
+    .game-stage {
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -145,7 +152,6 @@
       aspect-ratio: 4 / 3;
       max-width: 100%;
       max-height: 100%;
-      width: auto;
       background-image: url('sterile-field.jpg');
       background-size: 100% 100%;
       background-repeat: no-repeat;
@@ -156,77 +162,78 @@
       flex-shrink: 1;
     }
 
-    .divider {
-      flex: 0 0 1px;
-      background: #ddd;
-    }
-
-    body.dark .divider {
-      background: #444;
-    }
-
-    .instructions {
-      flex: 0 0 clamp(260px, 22vw, 340px);
-      min-width: 240px;
-      max-width: 340px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      font-size: clamp(13px, 0.9vw, 16px);
-      line-height: 1.45;
-    }
-
-    .instructions-scroll {
-      flex: 1 1 auto;
+    .right-panel {
+      min-width: 0;
       min-height: 0;
-      overflow: auto;
-      padding-right: 6px;
+      border-left: 1px solid #ddd;
+      padding-left: 14px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    body.dark .right-panel {
+      border-left: 1px solid #444;
     }
 
     .instructions h3 {
+      margin: 0;
       color: #1e8449;
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: clamp(18px, 1.2vw, 24px);
+      font-size: clamp(22px, 1.3vw, 26px);
     }
 
-    .instructions ul {
-      margin-top: 8px;
-      margin-bottom: 16px;
+    .instructions-list,
+    .remember-list {
+      margin: 0;
       padding-left: 22px;
+      font-size: clamp(14px, 0.95vw, 16px);
+      line-height: 1.45;
+    }
+
+    .instructions-list li,
+    .remember-list li {
+      margin-bottom: 6px;
+    }
+
+    .remember-label {
+      font-weight: bold;
+      font-size: clamp(15px, 1vw, 17px);
+      margin-top: 2px;
     }
 
     .bank {
-      margin-top: 14px;
       display: flex;
       justify-content: center;
-      gap: 28px;
-      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+      padding-top: 4px;
     }
 
     .draggable {
-      width: clamp(44px, 3.5vw, 62px);
-      height: clamp(44px, 3.5vw, 62px);
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       border: 2px solid black;
       cursor: grab;
       flex: 0 0 auto;
     }
 
-    .dot-red {
-      background: #e74c3c;
-    }
+    .dot-red { background: #e74c3c; }
+    .dot-green { background: #2ecc71; }
 
-    .dot-green {
-      background: #2ecc71;
+    .feedback-wrap {
+      display: flex;
+      align-items: end;
+      min-height: 0;
     }
 
     #feedback {
-      margin-top: 14px;
+      width: 100%;
       padding: 12px;
       border-radius: 6px;
       display: none;
-      font-size: clamp(13px, 0.9vw, 15px);
+      font-size: 14px;
     }
 
     .feedback-error {
@@ -235,10 +242,15 @@
       border-left: 4px solid #e74c3c;
     }
 
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     #resetBtn {
-      margin: 14px auto 0 auto;
       padding: 8px 16px;
-      font-size: clamp(14px, 0.95vw, 16px);
+      font-size: 16px;
       cursor: pointer;
       display: block;
     }
@@ -295,17 +307,19 @@
       to { transform: translateY(10px); opacity: 1; }
     }
 
-    @media (max-width: 1100px), (max-height: 700px) {
+    @media (max-width: 1200px) {
       .main-wrapper {
-        gap: 12px;
+        grid-template-columns: minmax(0, 1fr) 270px;
       }
 
-      .instructions {
-        flex-basis: 280px;
+      .draggable {
+        width: 54px;
+        height: 54px;
       }
 
-      .module-wrapper {
-        padding: 14px;
+      .instructions-list,
+      .remember-list {
+        font-size: 13px;
       }
     }
 
@@ -319,7 +333,7 @@
         min-height: 100vh;
       }
 
-      .content-area {
+      .page-wrap {
         overflow: visible;
       }
 
@@ -329,13 +343,21 @@
       }
 
       .main-wrapper {
+        display: flex;
         flex-direction: column;
         overflow: visible;
       }
 
-      .game-panel {
-        width: 100%;
-        min-height: 0;
+      .right-panel {
+        border-left: none;
+        border-top: 1px solid #ddd;
+        padding-left: 0;
+        padding-top: 12px;
+        overflow: visible;
+      }
+
+      .game-side {
+        overflow: visible;
       }
 
       #gameContainer {
@@ -343,28 +365,14 @@
         height: auto;
         aspect-ratio: 4 / 3;
       }
-
-      .divider {
-        display: none;
-      }
-
-      .instructions {
-        max-width: none;
-        width: 100%;
-      }
-
-      .instructions-scroll {
-        overflow: visible;
-      }
     }
   </style>
 </head>
-
 <body>
   <div class="app-shell">
     <div class="header-bar">Intermittent Catheterization</div>
 
-    <div class="content-area">
+    <div class="page-wrap">
       <div class="module-wrapper">
 
         <div class="scenario">
@@ -378,35 +386,45 @@
         </div>
 
         <div class="main-wrapper">
-          <div class="game-panel">
-            <div id="gameContainer"></div>
+          <div class="game-side">
+            <div class="game-stage">
+              <div id="gameContainer"></div>
+            </div>
           </div>
 
-          <div class="divider"></div>
-
-          <div class="instructions">
-            <div class="instructions-scroll">
+          <div class="right-panel">
+            <div class="instructions">
               <h3>Instructions:</h3>
-              <ul>
-                <li>Review the sterile field image carefully.</li>
-                <li>Drag the red dot to locations that are non-sterile.</li>
-                <li>Drag the green dot to locations that are sterile.</li>
-                <li>A dot will only place if your answer is correct.</li>
-                <li>Your score and contamination count are displayed in the top left. Use this feedback to guide your decision-making as you continue.</li>
-              </ul>
+            </div>
 
-              <strong>Remember:</strong>
-              <ul>
+            <ul class="instructions-list">
+              <li>Review the sterile field image carefully.</li>
+              <li>Drag the red dot to locations that are non-sterile.</li>
+              <li>Drag the green dot to locations that are sterile.</li>
+              <li>A dot will only place if your answer is correct.</li>
+              <li>Your score and contamination count are displayed in the top left.</li>
+            </ul>
+
+            <div>
+              <div class="remember-label">Remember:</div>
+              <ul class="remember-list">
                 <li>The outer 1-inch border of a sterile field is considered contaminated.</li>
                 <li>Sterile items must only contact sterile surfaces.</li>
               </ul>
+            </div>
 
-              <div class="bank">
-                <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
-                <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
+            <div class="feedback-wrap">
+              <div style="width:100%;">
+                <div class="bank">
+                  <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
+                  <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
+                </div>
+
+                <div id="feedback"></div>
               </div>
+            </div>
 
-              <div id="feedback"></div>
+            <div class="controls">
               <button id="resetBtn" onclick="resetGame()">Reset</button>
             </div>
           </div>
