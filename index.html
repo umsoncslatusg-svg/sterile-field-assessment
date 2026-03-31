@@ -30,8 +30,8 @@
       height: 100vh;
       display: grid;
       grid-template-rows: auto 1fr;
-      gap: 8px;
-      padding: 8px;
+      gap: 10px;
+      padding: 10px;
       overflow: hidden;
     }
 
@@ -40,61 +40,37 @@
       color: white;
       text-align: center;
       font-weight: bold;
-      font-size: 30px;
+      font-size: 32px;
       line-height: 1.2;
-      padding: 12px 16px;
-      border-radius: 12px;
+      padding: 14px 18px;
+      border-radius: 16px;
     }
 
     .main-layout {
       min-width: 0;
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 280px;
-      gap: 10px;
+      grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.85fr) 330px;
+      gap: 14px;
       overflow: hidden;
     }
 
-    .game-column,
-    .side-column {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    .panel {
+      background: #f3f3f3;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      min-width: 0;
+      min-height: 0;
     }
 
-    body.dark .game-column,
-    body.dark .side-column {
-      background: #1e1e1e;
+    body.dark .panel {
+      background: #1f1f1f;
       box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
 
-    .game-column {
-      min-width: 0;
-      min-height: 0;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
-      gap: 8px;
-      padding: 12px;
-      overflow: hidden;
-    }
-
-    .top-info {
-      display: flex;
-      align-items: center;
-      gap: 26px;
-      flex-wrap: wrap;
-      font-size: 22px;
-      font-weight: bold;
-      color: #1e8449;
-    }
-
-    #contaminationCount {
-      color: #c0392b;
-    }
-
-    .game-stage {
-      min-width: 0;
-      min-height: 0;
+    /* LEFT GAME PANEL */
+    .game-panel {
+      padding: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -103,31 +79,74 @@
 
     #gameContainer {
       position: relative;
+      width: 100%;
       height: 100%;
-      aspect-ratio: 4 / 3;
-      max-width: 100%;
-      max-height: 100%;
       background-image: url('sterile-field.jpg');
       background-size: 100% 100%;
       background-repeat: no-repeat;
       background-position: center;
-      border-radius: 12px;
-      border: 3px solid #bfc7cf;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      border-radius: 20px;
+      border: 4px solid #bfc7cf;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      align-self: center;
     }
 
-    .controls-row {
+    /* CENTER PANEL */
+    .center-panel {
+      padding: 18px 18px 16px;
+      display: grid;
+      grid-template-rows: auto auto auto auto auto 1fr;
+      gap: 14px;
+      overflow: hidden;
+    }
+
+    .scenario-box {
+      font-size: 26px;
+      line-height: 1.35;
+      padding: 16px 16px 16px 18px;
+      background: #e5e7e7;
+      border-left: 6px solid #1e8449;
+      border-radius: 14px;
+    }
+
+    body.dark .scenario-box {
+      background: #263238;
+      border-left-color: #2ecc71;
+    }
+
+    .scenario-box strong {
+      font-weight: 700;
+    }
+
+    .instructions-title {
+      margin: 0;
+      color: #1e8449;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .instructions-list {
+      margin: 0;
+      padding-left: 24px;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .instructions-list li {
+      margin-bottom: 4px;
+    }
+
+    .bank {
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 22px;
-      flex-wrap: wrap;
+      gap: 16px;
       padding-top: 2px;
     }
 
     .draggable {
-      width: 78px;
-      height: 78px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       border: 3px solid black;
       cursor: grab;
@@ -142,83 +161,86 @@
       background: #2ecc71;
     }
 
-    #resetBtn,
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 38px;
+      flex-wrap: wrap;
+      font-size: 29px;
+      font-weight: 700;
+    }
+
+    #scoreBoard {
+      color: #1e8449;
+    }
+
+    #contaminationCount {
+      color: #c0392b;
+    }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      padding: 20px 18px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .button-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    #instructionsBtn,
     #modeToggle,
-    #instructionsBtn {
-      padding: 12px 18px;
-      font-size: 18px;
+    #resetBtn {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 22px;
       cursor: pointer;
-      border-radius: 10px;
-      border: 1px solid #1e8449;
+      border-radius: 14px;
+      border: 2px solid #1e8449;
       background: white;
       color: #1e8449;
     }
 
-    body.dark #resetBtn,
+    body.dark #instructionsBtn,
     body.dark #modeToggle,
-    body.dark #instructionsBtn {
+    body.dark #resetBtn {
       background: #333;
       color: white;
       border: 1px solid white;
     }
 
-    .side-column {
-      min-width: 0;
-      min-height: 0;
-      display: grid;
-      grid-template-rows: auto auto auto 1fr auto;
-      gap: 14px;
-      padding: 16px;
-      overflow: hidden;
-    }
-
-    .scenario-box {
-      font-size: 18px;
-      line-height: 1.4;
-      padding: 12px;
-      background: #f4f8f6;
-      border-left: 5px solid #1e8449;
-      border-radius: 8px;
-    }
-
-    body.dark .scenario-box {
-      background: #263238;
-      border-left-color: #2ecc71;
-    }
-
-    .button-stack {
-      display: grid;
-      gap: 10px;
-    }
-
-    .mini-help {
-      font-size: 17px;
-      line-height: 1.45;
+    .help-box {
       overflow: auto;
-      padding-right: 4px;
+      padding-right: 6px;
     }
 
-    .mini-help strong {
+    .help-box strong {
       display: block;
-      margin-bottom: 6px;
-      font-size: 20px;
+      margin-bottom: 12px;
+      font-size: 22px;
       color: #1e8449;
     }
 
-    .mini-help ul {
-      margin: 8px 0 0 20px;
-      padding: 0;
+    .help-box ul {
+      margin: 0;
+      padding-left: 26px;
+      font-size: 17px;
+      line-height: 1.55;
     }
 
-    .mini-help li {
-      margin-bottom: 8px;
+    .help-box li {
+      margin-bottom: 10px;
     }
 
     #feedback {
       display: none;
       padding: 12px;
-      border-radius: 8px;
-      font-size: 17px;
+      border-radius: 10px;
+      font-size: 16px;
       font-weight: 600;
     }
 
@@ -228,16 +250,17 @@
       border-left: 6px solid #e74c3c;
     }
 
+    /* 75% of previous 8.2 x 10.8 */
     .drop-zone {
       position: absolute;
-      width: 8.2%;
-      height: 10.8%;
+      width: 6.15%;
+      height: 8.1%;
       border-radius: 50%;
-      border: 3px dashed rgba(0,0,0,0.6);
+      border: 3px dashed rgba(0,0,0,0.55);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(18px, 1.5vw, 26px);
+      font-size: clamp(14px, 1.15vw, 22px);
       font-weight: bold;
       color: #222;
       background: rgba(255,255,255,0.88);
@@ -252,8 +275,8 @@
 
     .placed-dot {
       position: absolute;
-      width: 8.2%;
-      height: 10.8%;
+      width: 6.15%;
+      height: 8.1%;
       border-radius: 50%;
       border: 3px solid black;
       cursor: default;
@@ -336,33 +359,27 @@
       color: #1e8449;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1400px) {
       .main-layout {
-        grid-template-columns: minmax(0, 1fr) 240px;
+        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr) 290px;
       }
 
-      .top-info {
-        font-size: 18px;
+      .scenario-box {
+        font-size: 21px;
       }
 
-      .scenario-box,
-      .mini-help {
-        font-size: 15px;
+      .score-row {
+        font-size: 24px;
       }
 
-      .draggable {
-        width: 68px;
-        height: 68px;
-      }
-
-      #resetBtn,
+      #instructionsBtn,
       #modeToggle,
-      #instructionsBtn {
-        font-size: 16px;
+      #resetBtn {
+        font-size: 19px;
       }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1100px) {
       html, body {
         overflow: auto;
       }
@@ -376,14 +393,11 @@
         grid-template-columns: 1fr;
       }
 
-      .game-column,
-      .side-column {
+      .panel {
         overflow: visible;
       }
 
       #gameContainer {
-        width: 100%;
-        height: auto;
         aspect-ratio: 4 / 3;
       }
     }
@@ -394,34 +408,46 @@
     <div class="header-bar">Intermittent Catheterization</div>
 
     <div class="main-layout">
-      <div class="game-column">
-        <div class="top-info">
-          <div id="scoreBoard">Score: 0 / 20</div>
-          <div id="contaminationCount">Contaminations: 0</div>
-        </div>
-
-        <div class="game-stage">
-          <div id="gameContainer"></div>
-        </div>
-
-        <div class="controls-row">
-          <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
-          <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
-          <button id="resetBtn" onclick="resetGame()">Reset</button>
-        </div>
+      <div class="panel game-panel">
+        <div id="gameContainer"></div>
       </div>
 
-      <div class="side-column">
+      <div class="panel center-panel">
         <div class="scenario-box">
           <strong>Scenario:</strong> Identify which numbered areas are sterile and which are contaminated.
         </div>
 
+        <h3 class="instructions-title">Instructions</h3>
+
+        <ul class="instructions-list">
+          <li>Review the sterile field image carefully.</li>
+          <li>Drag the red dot to locations that are non-sterile.</li>
+          <li>Drag the green dot to locations that are sterile.</li>
+          <li>A dot will only place if your answer is correct.</li>
+          <li>Sterile items must only contact sterile surfaces.</li>
+        </ul>
+
+        <div class="bank">
+          <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
+          <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
+        </div>
+
+        <div class="score-row">
+          <div id="scoreBoard">Score: 0 / 20</div>
+          <div id="contaminationCount">Contaminations: 0</div>
+        </div>
+
+        <div id="feedback"></div>
+      </div>
+
+      <div class="panel right-panel">
         <div class="button-stack">
           <button id="instructionsBtn" onclick="openInstructions()">Instructions</button>
           <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
+          <button id="resetBtn" onclick="resetGame()">Reset</button>
         </div>
 
-        <div class="mini-help">
+        <div class="help-box">
           <strong>Quick Help</strong>
           <ul>
             <li>Red = non-sterile</li>
@@ -429,10 +455,6 @@
             <li>Only correct drops place a dot</li>
           </ul>
         </div>
-
-        <div></div>
-
-        <div id="feedback"></div>
       </div>
     </div>
   </div>
