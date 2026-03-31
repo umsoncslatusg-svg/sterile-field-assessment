@@ -41,13 +41,13 @@
       text-align: center;
       font-weight: bold;
       font-size: clamp(22px, 2vw, 30px);
-      padding: 12px 18px;
+      padding: 10px 18px;
     }
 
     .page-wrap {
       flex: 1 1 auto;
       min-height: 0;
-      padding: 10px;
+      padding: 8px 10px;
       overflow: hidden;
     }
 
@@ -57,8 +57,8 @@
       background: white;
       border-radius: 10px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-rows: auto auto auto minmax(0, 1fr) auto;
       gap: 8px;
       padding: 10px 12px;
       overflow: hidden;
@@ -70,10 +70,58 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
 
-    .scenario {
-      flex: 0 0 auto;
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .score-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      font-weight: bold;
+      color: #1e8449;
+      font-size: clamp(15px, 1vw, 20px);
+    }
+
+    #contaminationCount {
+      color: #c0392b;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #modeToggle,
+    #instructionsBtn,
+    #resetBtn {
+      padding: 10px 16px;
       font-size: clamp(14px, 0.95vw, 17px);
-      line-height: 1.35;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid #1e8449;
+      background: white;
+      color: #1e8449;
+    }
+
+    body.dark #modeToggle,
+    body.dark #instructionsBtn,
+    body.dark #resetBtn {
+      background: #333;
+      color: white;
+      border: 1px solid white;
+    }
+
+    .scenario {
+      font-size: clamp(15px, 1vw, 19px);
+      line-height: 1.3;
       padding: 10px 12px;
       background: #f4f8f6;
       border-left: 5px solid #1e8449;
@@ -86,59 +134,19 @@
       border-left-color: #2ecc71;
     }
 
-    .score-wrapper {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      font-weight: bold;
-      color: #1e8449;
-      font-size: clamp(14px, 0.95vw, 17px);
-      padding: 0 2px;
+    .quick-reminder {
+      font-size: clamp(15px, 0.95vw, 18px);
+      font-weight: 600;
+      color: #444;
+      text-align: center;
+      padding: 2px 10px 4px;
     }
 
-    #contaminationCount {
-      color: #c0392b;
+    body.dark .quick-reminder {
+      color: #ddd;
     }
 
-    #modeToggle {
-      padding: 7px 12px;
-      font-size: clamp(13px, 0.9vw, 15px);
-      cursor: pointer;
-      border-radius: 6px;
-      border: 1px solid #1e8449;
-      background: white;
-      color: #1e8449;
-    }
-
-    body.dark #modeToggle {
-      background: #333;
-      color: white;
-      border: 1px solid white;
-    }
-
-    .main-wrapper {
-      flex: 1 1 auto;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 250px;
-      gap: 14px;
-      overflow: hidden;
-      align-items: stretch;
-    }
-
-    .left-panel {
-      min-width: 0;
-      min-height: 0;
-      display: grid;
-      grid-template-rows: minmax(0, 1fr) auto;
-      gap: 10px;
-      overflow: hidden;
-    }
-
-    .game-side {
-      min-width: 0;
+    .game-stage {
       min-height: 0;
       display: flex;
       align-items: center;
@@ -163,118 +171,60 @@
     }
 
     .bottom-controls {
-      flex: 0 0 auto;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 26px;
-      padding: 4px 0 2px;
+      gap: 28px;
       flex-wrap: wrap;
+      padding-top: 2px;
+      padding-bottom: 4px;
     }
 
     .draggable {
-      width: 64px;
-      height: 64px;
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
-      border: 2px solid black;
+      border: 3px solid black;
       cursor: grab;
       flex: 0 0 auto;
     }
 
-    .dot-red { background: #e74c3c; }
-    .dot-green { background: #2ecc71; }
-
-    #resetBtn {
-      padding: 10px 18px;
-      font-size: 16px;
-      cursor: pointer;
-      display: block;
+    .dot-red {
+      background: #e74c3c;
     }
 
-    .right-panel {
-      min-width: 0;
-      min-height: 0;
-      border-left: 1px solid #ddd;
-      padding-left: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 10px;
-      overflow: hidden;
-    }
-
-    body.dark .right-panel {
-      border-left: 1px solid #444;
-    }
-
-    .instructions h3 {
-      margin: 0;
-      color: #1e8449;
-      font-size: clamp(24px, 1.3vw, 28px);
-    }
-
-    .instructions-list,
-    .remember-list {
-      margin: 0;
-      padding-left: 22px;
-      font-size: clamp(14px, 0.9vw, 16px);
-      line-height: 1.4;
-    }
-
-    .instructions-list li,
-    .remember-list li {
-      margin-bottom: 8px;
-    }
-
-    .remember-label {
-      font-weight: bold;
-      font-size: clamp(15px, 1vw, 17px);
-      margin-top: 4px;
-    }
-
-    #feedback {
-      margin-top: 6px;
-      width: 100%;
-      padding: 12px;
-      border-radius: 6px;
-      display: none;
-      font-size: 14px;
-    }
-
-    .feedback-error {
-      background: #fdecea;
-      color: #922b21;
-      border-left: 4px solid #e74c3c;
+    .dot-green {
+      background: #2ecc71;
     }
 
     .drop-zone {
       position: absolute;
-      width: 5.4%;
-      height: 7.2%;
+      width: 6.6%;
+      height: 8.6%;
       border-radius: 50%;
-      border: 2px dashed rgba(0,0,0,0.5);
+      border: 3px dashed rgba(0,0,0,0.55);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(12px, 1.35vw, 18px);
+      font-size: clamp(14px, 1.45vw, 22px);
       font-weight: bold;
-      color: #333;
-      background: rgba(255,255,255,0.82);
+      color: #222;
+      background: rgba(255,255,255,0.86);
       user-select: none;
     }
 
     body.dark .drop-zone {
-      border: 2px dashed #aaa;
+      border: 3px dashed #aaa;
       color: #e0e0e0;
-      background: rgba(50,50,50,0.7);
+      background: rgba(50,50,50,0.75);
     }
 
     .placed-dot {
       position: absolute;
-      width: 5.4%;
-      height: 7.2%;
+      width: 6.6%;
+      height: 8.6%;
       border-radius: 50%;
-      border: 2px solid black;
+      border: 3px solid black;
       cursor: default;
     }
 
@@ -299,23 +249,96 @@
       to { transform: translateY(10px); opacity: 1; }
     }
 
-    @media (max-width: 1200px) {
-      .main-wrapper {
-        grid-template-columns: minmax(0, 1fr) 220px;
-      }
-
-      .instructions-list,
-      .remember-list {
-        font-size: 13px;
-      }
-
-      .draggable {
-        width: 58px;
-        height: 58px;
-      }
+    #feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 125px;
+      transform: translateX(-50%);
+      min-width: 320px;
+      max-width: 700px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      display: none;
+      font-size: clamp(16px, 1vw, 20px);
+      font-weight: 600;
+      z-index: 1500;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
     }
 
-    @media (max-width: 900px) {
+    .feedback-error {
+      background: #fdecea;
+      color: #922b21;
+      border-left: 6px solid #e74c3c;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      width: min(800px, 90vw);
+      background: white;
+      color: #111;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 12px 34px rgba(0,0,0,0.25);
+    }
+
+    body.dark .modal {
+      background: #1f1f1f;
+      color: #f0f0f0;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      color: #1e8449;
+      font-size: clamp(24px, 1.5vw, 32px);
+    }
+
+    .modal ul {
+      font-size: clamp(17px, 1.05vw, 21px);
+      line-height: 1.55;
+      padding-left: 26px;
+    }
+
+    .modal li {
+      margin-bottom: 10px;
+    }
+
+    .modal-actions {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .modal-actions button {
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid #1e8449;
+      background: white;
+      color: #1e8449;
+    }
+
+    body.dark .modal-actions button {
+      background: #333;
+      color: white;
+      border: 1px solid white;
+    }
+
+    @media (max-width: 1000px) {
       html, body {
         overflow: auto;
       }
@@ -325,38 +348,30 @@
         min-height: 100vh;
       }
 
-      .page-wrap {
+      .page-wrap,
+      .module-wrapper {
         overflow: visible;
       }
 
       .module-wrapper {
         height: auto;
-        overflow: visible;
+        grid-template-rows: auto auto auto auto auto;
       }
 
-      .main-wrapper {
-        display: flex;
-        flex-direction: column;
-        overflow: visible;
-      }
-
-      .right-panel {
-        border-left: none;
-        border-top: 1px solid #ddd;
-        padding-left: 0;
-        padding-top: 12px;
-        overflow: visible;
-      }
-
-      .left-panel,
-      .game-side {
-        overflow: visible;
+      .game-stage {
+        min-height: 300px;
       }
 
       #gameContainer {
         width: 100%;
         height: auto;
         aspect-ratio: 4 / 3;
+      }
+
+      #feedback {
+        position: static;
+        transform: none;
+        margin: 0 auto;
       }
     }
   </style>
@@ -368,54 +383,55 @@
     <div class="page-wrap">
       <div class="module-wrapper">
 
+        <div class="top-bar">
+          <div class="score-wrapper">
+            <div id="scoreBoard">Score: 0 / 20</div>
+            <div id="contaminationCount">Contaminations: 0</div>
+          </div>
+
+          <div class="top-controls">
+            <button id="instructionsBtn" onclick="openInstructions()">Instructions</button>
+            <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
+          </div>
+        </div>
+
         <div class="scenario">
-          <strong>Scenario:</strong> You are preparing a sterile field for a central line dressing change. Before proceeding, identify all areas that remain sterile and those that are contaminated.
+          <strong>Scenario:</strong> Identify which numbered areas are sterile and which are contaminated.
         </div>
 
-        <div class="score-wrapper">
-          <div id="scoreBoard">Score: 0 / 20</div>
-          <div id="contaminationCount">Contaminations: 0</div>
-          <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
+        <div class="quick-reminder">
+          Reminder: The outer 1-inch border is contaminated.
         </div>
 
-        <div class="main-wrapper">
-          <div class="left-panel">
-            <div class="game-side">
-              <div id="gameContainer"></div>
-            </div>
-
-            <div class="bottom-controls">
-              <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
-              <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
-              <button id="resetBtn" onclick="resetGame()">Reset</button>
-            </div>
-          </div>
-
-          <div class="right-panel">
-            <div class="instructions">
-              <h3>Instructions:</h3>
-            </div>
-
-            <ul class="instructions-list">
-              <li>Review the sterile field image carefully.</li>
-              <li>Drag the red dot to locations that are non-sterile.</li>
-              <li>Drag the green dot to locations that are sterile.</li>
-              <li>A dot will only place if your answer is correct.</li>
-              <li>Your score and contamination count are displayed in the top left.</li>
-            </ul>
-
-            <div>
-              <div class="remember-label">Remember:</div>
-              <ul class="remember-list">
-                <li>The outer 1-inch border of a sterile field is considered contaminated.</li>
-                <li>Sterile items must only contact sterile surfaces.</li>
-              </ul>
-            </div>
-
-            <div id="feedback"></div>
-          </div>
+        <div class="game-stage">
+          <div id="gameContainer"></div>
         </div>
 
+        <div class="bottom-controls">
+          <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
+          <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
+          <button id="resetBtn" onclick="resetGame()">Reset</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="feedback"></div>
+
+  <div id="instructionsModal" class="modal-backdrop" onclick="closeInstructions(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <h2>Instructions</h2>
+      <ul>
+        <li>Review the sterile field image carefully.</li>
+        <li>Drag the red dot to locations that are non-sterile.</li>
+        <li>Drag the green dot to locations that are sterile.</li>
+        <li>A dot will only place if your answer is correct.</li>
+        <li>The outer 1-inch border of a sterile field is contaminated.</li>
+        <li>Sterile items must only contact sterile surfaces.</li>
+      </ul>
+      <div class="modal-actions">
+        <button onclick="closeInstructions()">Close</button>
       </div>
     </div>
   </div>
@@ -425,6 +441,16 @@
       document.body.classList.toggle("dark");
       const btn = document.getElementById("modeToggle");
       btn.innerText = document.body.classList.contains("dark") ? "Light Mode" : "Night Mode";
+    }
+
+    function openInstructions() {
+      document.getElementById("instructionsModal").classList.add("show");
+    }
+
+    function closeInstructions(event) {
+      if (!event || event.target.id === "instructionsModal" || event.type === "click") {
+        document.getElementById("instructionsModal").classList.remove("show");
+      }
     }
 
     let ZONES = [
@@ -518,6 +544,7 @@
 
         const placedDot = document.createElement("div");
         placedDot.className = "placed-dot " + (droppedType === "sterile" ? "dot-green" : "dot-red");
+
         placedDot.style.top = e.currentTarget.getAttribute("data-top") + "%";
         placedDot.style.left = e.currentTarget.getAttribute("data-left") + "%";
 
