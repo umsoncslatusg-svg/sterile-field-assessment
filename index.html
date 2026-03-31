@@ -28,30 +28,68 @@
     .app-shell {
       width: 100vw;
       height: 100vh;
-      padding: 8px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
+      grid-template-rows: auto 1fr;
+      gap: 8px;
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .header-bar {
+      background: #1e8449;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      font-size: 30px;
+      line-height: 1.2;
+      padding: 12px 16px;
+      border-radius: 12px;
+    }
+
+    .main-layout {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
       gap: 10px;
       overflow: hidden;
     }
 
-    .game-column {
-      min-width: 0;
-      min-height: 0;
+    .game-column,
+    .side-column {
       background: white;
       border-radius: 12px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      padding: 10px;
-      display: grid;
-      grid-template-rows: minmax(0, 1fr) auto;
-      gap: 10px;
-      overflow: hidden;
     }
 
     body.dark .game-column,
     body.dark .side-column {
       background: #1e1e1e;
       box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+
+    .game-column {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 8px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .top-info {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      flex-wrap: wrap;
+      font-size: 22px;
+      font-weight: bold;
+      color: #1e8449;
+    }
+
+    #contaminationCount {
+      color: #c0392b;
     }
 
     .game-stage {
@@ -65,8 +103,7 @@
 
     #gameContainer {
       position: relative;
-      width: min(100%, calc((100vh - 180px) * 1.3333));
-      height: min(100%, calc(100vw * 0.62));
+      height: 100%;
       aspect-ratio: 4 / 3;
       max-width: 100%;
       max-height: 100%;
@@ -77,23 +114,22 @@
       border-radius: 12px;
       border: 3px solid #bfc7cf;
       box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-      flex-shrink: 0;
     }
 
     .controls-row {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 28px;
+      gap: 22px;
       flex-wrap: wrap;
-      padding-bottom: 4px;
+      padding-top: 2px;
     }
 
     .draggable {
-      width: 110px;
-      height: 110px;
+      width: 78px;
+      height: 78px;
       border-radius: 50%;
-      border: 4px solid black;
+      border: 3px solid black;
       cursor: grab;
       flex: 0 0 auto;
     }
@@ -106,12 +142,14 @@
       background: #2ecc71;
     }
 
-    #resetBtn {
-      padding: 14px 22px;
-      font-size: 22px;
+    #resetBtn,
+    #modeToggle,
+    #instructionsBtn {
+      padding: 12px 18px;
+      font-size: 18px;
       cursor: pointer;
       border-radius: 10px;
-      border: 2px solid #1e8449;
+      border: 1px solid #1e8449;
       background: white;
       color: #1e8449;
     }
@@ -127,42 +165,16 @@
     .side-column {
       min-width: 0;
       min-height: 0;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      padding: 14px 16px;
       display: grid;
-      grid-template-rows: auto auto auto auto auto 1fr auto;
+      grid-template-rows: auto auto auto 1fr auto;
       gap: 14px;
+      padding: 16px;
       overflow: hidden;
     }
 
-    .title-box {
-      background: #1e8449;
-      color: white;
-      text-align: center;
-      font-weight: bold;
-      font-size: 28px;
-      line-height: 1.2;
-      padding: 14px 12px;
-      border-radius: 10px;
-    }
-
-    .score-box {
-      display: grid;
-      gap: 10px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #1e8449;
-    }
-
-    #contaminationCount {
-      color: #c0392b;
-    }
-
     .scenario-box {
-      font-size: 19px;
-      line-height: 1.35;
+      font-size: 18px;
+      line-height: 1.4;
       padding: 12px;
       background: #f4f8f6;
       border-left: 5px solid #1e8449;
@@ -174,32 +186,13 @@
       border-left-color: #2ecc71;
     }
 
-    .reminder-box {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.35;
-      text-align: center;
-    }
-
     .button-stack {
       display: grid;
       gap: 10px;
     }
 
-    #modeToggle,
-    #instructionsBtn {
-      width: 100%;
-      padding: 12px 16px;
-      font-size: 18px;
-      cursor: pointer;
-      border-radius: 8px;
-      border: 1px solid #1e8449;
-      background: white;
-      color: #1e8449;
-    }
-
     .mini-help {
-      font-size: 18px;
+      font-size: 17px;
       line-height: 1.45;
       overflow: auto;
       padding-right: 4px;
@@ -225,7 +218,7 @@
       display: none;
       padding: 12px;
       border-radius: 8px;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
     }
 
@@ -237,17 +230,17 @@
 
     .drop-zone {
       position: absolute;
-      width: 9.2%;
-      height: 12.2%;
+      width: 8.2%;
+      height: 10.8%;
       border-radius: 50%;
       border: 3px dashed rgba(0,0,0,0.6);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(18px, 1.8vw, 28px);
+      font-size: clamp(18px, 1.5vw, 26px);
       font-weight: bold;
       color: #222;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.88);
       user-select: none;
     }
 
@@ -259,8 +252,8 @@
 
     .placed-dot {
       position: absolute;
-      width: 9.2%;
-      height: 12.2%;
+      width: 8.2%;
+      height: 10.8%;
       border-radius: 50%;
       border: 3px solid black;
       cursor: default;
@@ -344,31 +337,28 @@
     }
 
     @media (max-width: 1200px) {
-      .app-shell {
-        grid-template-columns: minmax(0, 1fr) 260px;
+      .main-layout {
+        grid-template-columns: minmax(0, 1fr) 240px;
       }
 
-      .title-box {
-        font-size: 24px;
-      }
-
-      .score-box {
-        font-size: 20px;
+      .top-info {
+        font-size: 18px;
       }
 
       .scenario-box,
-      .reminder-box,
       .mini-help {
-        font-size: 16px;
+        font-size: 15px;
       }
 
       .draggable {
-        width: 90px;
-        height: 90px;
+        width: 68px;
+        height: 68px;
       }
 
-      #resetBtn {
-        font-size: 18px;
+      #resetBtn,
+      #modeToggle,
+      #instructionsBtn {
+        font-size: 16px;
       }
     }
 
@@ -380,16 +370,15 @@
       .app-shell {
         height: auto;
         min-height: 100vh;
+      }
+
+      .main-layout {
         grid-template-columns: 1fr;
       }
 
       .game-column,
       .side-column {
         overflow: visible;
-      }
-
-      .game-column {
-        grid-template-rows: auto auto;
       }
 
       #gameContainer {
@@ -402,49 +391,49 @@
 </head>
 <body>
   <div class="app-shell">
-    <div class="game-column">
-      <div class="game-stage">
-        <div id="gameContainer"></div>
+    <div class="header-bar">Intermittent Catheterization</div>
+
+    <div class="main-layout">
+      <div class="game-column">
+        <div class="top-info">
+          <div id="scoreBoard">Score: 0 / 20</div>
+          <div id="contaminationCount">Contaminations: 0</div>
+        </div>
+
+        <div class="game-stage">
+          <div id="gameContainer"></div>
+        </div>
+
+        <div class="controls-row">
+          <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
+          <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
+          <button id="resetBtn" onclick="resetGame()">Reset</button>
+        </div>
       </div>
 
-      <div class="controls-row">
-        <div class="draggable dot-red" draggable="true" data-type="nonsterile" title="Non-sterile"></div>
-        <div class="draggable dot-green" draggable="true" data-type="sterile" title="Sterile"></div>
-        <button id="resetBtn" onclick="resetGame()">Reset</button>
+      <div class="side-column">
+        <div class="scenario-box">
+          <strong>Scenario:</strong> Identify which numbered areas are sterile and which are contaminated.
+        </div>
+
+        <div class="button-stack">
+          <button id="instructionsBtn" onclick="openInstructions()">Instructions</button>
+          <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
+        </div>
+
+        <div class="mini-help">
+          <strong>Quick Help</strong>
+          <ul>
+            <li>Red = non-sterile</li>
+            <li>Green = sterile</li>
+            <li>Only correct drops place a dot</li>
+          </ul>
+        </div>
+
+        <div></div>
+
+        <div id="feedback"></div>
       </div>
-    </div>
-
-    <div class="side-column">
-      <div class="title-box">Intermittent Catheterization</div>
-
-      <div class="score-box">
-        <div id="scoreBoard">Score: 0 / 20</div>
-        <div id="contaminationCount">Contaminations: 0</div>
-      </div>
-
-      <div class="scenario-box">
-        <strong>Scenario:</strong> Identify which numbered areas are sterile and which are contaminated.
-      </div>
-
-      <div class="reminder-box">
-        Reminder: The outer 1-inch border is contaminated.
-      </div>
-
-      <div class="button-stack">
-        <button id="instructionsBtn" onclick="openInstructions()">Instructions</button>
-        <button id="modeToggle" onclick="toggleMode()">Night Mode</button>
-      </div>
-
-      <div class="mini-help">
-        <strong>Quick Help</strong>
-        <ul>
-          <li>Red = non-sterile</li>
-          <li>Green = sterile</li>
-          <li>Only correct drops place a dot</li>
-        </ul>
-      </div>
-
-      <div id="feedback"></div>
     </div>
   </div>
 
@@ -456,7 +445,6 @@
         <li>Drag the red dot to locations that are non-sterile.</li>
         <li>Drag the green dot to locations that are sterile.</li>
         <li>A dot will only place if your answer is correct.</li>
-        <li>The outer 1-inch border of a sterile field is contaminated.</li>
         <li>Sterile items must only contact sterile surfaces.</li>
       </ul>
       <div class="modal-actions">
